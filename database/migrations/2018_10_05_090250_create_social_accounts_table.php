@@ -25,6 +25,8 @@ class CreateSocialAccountsTable extends Migration
                   ->onDelete('cascade');
             $table->string('token_social'); // OAuth Token
             $table->string('provider_name');
+            $table->string('birthday'); 
+            $table->string('gender');  
             $table->timestamps();
         });
     }

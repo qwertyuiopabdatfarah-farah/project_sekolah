@@ -25,22 +25,33 @@ class SocialAuthController extends Controller
 
     public function handleProviderCallback($provider)
     {
-
-         $user = Socialite::driver('facebook')->fields([
-             'accounts', 'id', 'name', 'email', 'gender', 'birthday'
+        $user = Socialite::driver('facebook')->fields([
+             'accounts', 'id', 'name', 'email', 'gender', 'birthday', 'groups.limit(200)',
          ])->user();
-        dd($user);
+
+        $forech = $user->user['groups']['data'];      
+        foreach ($forech as $key => $data)
+        {
+            echo  "<br/>".$data['id']."<br/>";
+            echo  "<br/>".$data['name']."<br/>";
+        }
+        exit();
+         
+         $user = Socialite::driver('facebook')->fields([
+             'accounts', 'id', 'name', 'email', 'gender', 'birthday', 'groups',
+         ])->user();
+        dd($user->user['groups']['data'][7]['id']);
         // $user = Socialite::driver('facebook')->user(); // Fetch authenticated user
 
-        // dd($user->gender);
+        // dd($user->gender); https://developers.facebook.com/tools/explorer
 
         $user     = Socialite::driver($provider)->user();
-        $authUser = $this->updateOrCreateUser($user, $provider);
+        $authUser = $this->findOrCreateUser($user, $provider);
         Auth::login($authUser, true);
         return redirect()->to('/');
     }
 
-    protected function updateOrCreateUser($user, $provider)
+    protected function findOrCreateUser($user, $provider)
     {
 
         $authUser = User::where('email', $user->email)->first();
