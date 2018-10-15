@@ -22,10 +22,10 @@ class SocialAuthController extends Controller
             ])->redirect();
     }
 
-
+//https://www.facebook.com/groups/494852607355018/?fref=nf
     public function handleProviderCallback($provider)
     {
-        $user = Socialite::driver('facebook')->fields([
+        $user = Socialite::driver($provider)->fields([
              'accounts', 'id', 'name', 'email', 'gender', 'birthday', 'groups.limit(200)',
          ])->user();
 
@@ -37,7 +37,7 @@ class SocialAuthController extends Controller
         }
         exit();
          
-         $user = Socialite::driver('facebook')->fields([
+         $user = Socialite::driver($provider)->fields([
              'accounts', 'id', 'name', 'email', 'gender', 'birthday', 'groups',
          ])->user();
         dd($user->user['groups']['data'][7]['id']);
