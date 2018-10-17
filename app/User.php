@@ -33,13 +33,19 @@ class User extends Authenticatable
 
     public function news()
     {
-        return $this->hasMany('App\News', 'user_id', 'id');
+        return $this->hasMany(News::class);
+    }
+
+
+    public function newsimages()
+    {
+        return $this->hasMany(NewsImage::class);
     }
 
 
     public function socialaccounts()
     {
-        return $this->hasMany('App\SocialAccount', 'user_id', 'id');
+        return $this->hasMany(SocialAccount::class);
     }
 
 }

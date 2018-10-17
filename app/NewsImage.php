@@ -10,12 +10,18 @@ class NewsImage extends Model
 
 
     protected $fillable = [
-        'news_id', 'file_name'
+        'user_id', 'news_id', 'file_name'
     ];
+
+    public function user()
+    {
+       return $this->belongsTo(User::class);
+    }
 
     public function news()
     {
-       return $this->belongsTo('App\News', 'id', 'news_id');
+       return $this->belongsTo(News::class);
+       //jika tidak menggunakan eloguent return $this->belongsTo('App\News', 'news_id', 'id');
     }
 
    

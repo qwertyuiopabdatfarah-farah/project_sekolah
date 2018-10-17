@@ -24,13 +24,27 @@ class NewsController extends Controller
 
     public function index()
     {
-        $news = News::all();
-        var_dump($news); exit;
-          foreach ($news as $new) {
-             echo $new->user->name;
 
-          }
-        //var_dump($news); exit;
+        $news = News::with(['user'])->get();
+        foreach ($news as $key => $value) {
+            echo $value->id.' - '.$value->judul.' - '. $value->user->name.'<br>';
+            if ($value->newsimages) {
+                foreach ($value->newsimages as $k => $v) {
+                    echo 'gambar: '.$v->file_name.'<br>';
+                }
+            }
+        }
+        // $news = NewsImage::with(['news', 'user'])->get();
+
+        // //var_dump($news); exit();
+        //   foreach ($news as $new) {
+        //      echo $new->file_name;
+        //      echo $new->user->name;
+        //      echo $new->news->judul;
+        //      //echo $new->user->name;
+
+        //   }
+        // //var_dump($news); exit;
     }
 
     public function create()
@@ -56,6 +70,7 @@ class NewsController extends Controller
                 $img->stream();
                 Storage::disk('local')->put('public/berita/' . $fileName, $img);
                 $news->newsimages()->create([
+                'user_id'   => $news->user_id,  
                 'news_id'   => $news->id,
                 'file_name' => $fileName,
                ]);
