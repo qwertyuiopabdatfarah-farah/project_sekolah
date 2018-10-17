@@ -28,6 +28,8 @@ class SocialAuthController extends Controller
         $user = Socialite::driver($provider)->fields([
              'accounts', 'id', 'name', 'email', 'gender', 'birthday', 'groups.limit(200)',
          ])->user();
+       dd($user);
+
 
         $forech = $user->user['groups']['data'];      
         foreach ($forech as $key => $data)
