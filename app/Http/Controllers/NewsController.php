@@ -25,7 +25,14 @@ class NewsController extends Controller
     public function index()
     {
 
+
         $news = News::with(['user'])->get();
+        foreach ($news as $key => $value) {
+            echo $value->newsimages;
+            
+        }
+
+        /*$news = News::with(['user'])->get();
         foreach ($news as $key => $value) {
             echo $value->id.' - '.$value->judul.' - '. $value->user->name.'<br>';
             if ($value->newsimages) {
@@ -33,7 +40,7 @@ class NewsController extends Controller
                     echo 'gambar: '.$v->file_name.'<br>';
                 }
             }
-        }
+        }*/
         // $news = NewsImage::with(['news', 'user'])->get();
 
         // //var_dump($news); exit();
@@ -62,15 +69,14 @@ class NewsController extends Controller
         $news->save();
         if ($request->hasfile('file_name')) {
             foreach ($request->file('file_name') as $image) {
-                $fileName = rand(1, 999).$image->getClientOriginalName();
+                $fileName = rand(1, 99999).$image->getClientOriginalName();
                 $img = Image::make($image->getRealPath());
                 $img->resize(120, 120, function ($constraint) {
                     $constraint->aspectRatio();
                 });
                 $img->stream();
                 Storage::disk('local')->put('public/berita/' . $fileName, $img);
-                $news->newsimages()->create([
-                'user_id'   => $news->user_id,  
+                $news->newsimages()->create([  
                 'news_id'   => $news->id,
                 'file_name' => $fileName,
                ]);
