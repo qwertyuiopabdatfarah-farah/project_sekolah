@@ -169,6 +169,7 @@ return [
         Jrean\UserVerification\UserVerificationServiceProvider::class,
         Laravel\Socialite\SocialiteServiceProvider::class,
         Adldap\Laravel\AdldapServiceProvider::class,
+        Askedio\SoftCascade\Providers\GenericServiceProvider::class,
 
     ],
 

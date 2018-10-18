@@ -10,7 +10,7 @@ class NewsImage extends Model
 
 
     protected $fillable = [
-        'user_id', 'news_id', 'file_name'
+       'news_id', 'file_name'
     ];
 
     public function user()
