@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Image;
 use App\News;
-use App\NewsImage;
+use Yajra\DataTables\DataTables;
 use App\User;
 
 class NewsController extends Controller
@@ -22,36 +22,44 @@ class NewsController extends Controller
         });
     }
 
-    public function index()
+
+    public function getDataid()
     {
+        $news = News::with(['user' => function($query) {
+                 $query->where('id', $this->user->id);
+                }])->get(); 
+            return Datatables::of($news)
+                  ->addColumn('action', function ($news) {
+                          return '
+                          <div style="text-align: center">
+                          
+                              <a class="btn btn-success btn-xs" href="'.route('news.edit', $news->id) .'">
+                                    <i class="fa fa-pencil"></i> Edit</a>
 
+                               <a class="btn btn-info btn-xs" href="'.route('news.show', $news->id) .'">
+                               <i class="fa fa-search"></i>Show</a>
 
-        $news = News::with(['user'])->get();
-        foreach ($news as $key => $value) {
-            echo $value->newsimages;
-            
-        }
+                               <form onsubmit= "return ConfirmDelete()" action="' .route('news.destroy', $news->id). '" method="POST" accept-charset="UTF-8" style="display: inline;">
+                                 <input name="_method" type="hidden" value="DELETE">
+                                 <input name="_token" type="hidden" value="'.csrf_token().'"> 
+                                 <button type="submit" value="Delete" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i> Delete</button>
+                                </form>
 
-        /*$news = News::with(['user'])->get();
-        foreach ($news as $key => $value) {
-            echo $value->id.' - '.$value->judul.' - '. $value->user->name.'<br>';
-            if ($value->newsimages) {
-                foreach ($value->newsimages as $k => $v) {
-                    echo 'gambar: '.$v->file_name.'<br>';
-                }
-            }
-        }*/
-        // $news = NewsImage::with(['news', 'user'])->get();
+                          </div>'; 
+                     })
+                  ->rawColumns(['action'])
+                  ->addIndexColumn()
+                  ->make(true);
+    }
 
-        // //var_dump($news); exit();
-        //   foreach ($news as $new) {
-        //      echo $new->file_name;
-        //      echo $new->user->name;
-        //      echo $new->news->judul;
-        //      //echo $new->user->name;
+    public function getDataall()
+    {
+       $news = News::with(['user'])->get(); 
+    }
 
-        //   }
-        // //var_dump($news); exit;
+    public function indexId()
+    {
+      return view('news.indexid');       
     }
 
     public function create()

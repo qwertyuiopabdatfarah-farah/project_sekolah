@@ -12,6 +12,8 @@ class User extends Authenticatable
 {
     use HasApiTokens, Notifiable;
     use HasRoles;
+    use \Illuminate\Database\Eloquent\SoftDeletes;
+    use \Askedio\SoftCascade\Traits\SoftCascadeTrait;
 
     /**
      * The attributes that are mass assignable.
@@ -31,17 +33,12 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+     protected $softCascade = ['news'];
+
     public function news()
     {
         return $this->hasMany(News::class);
     }
-
-
-    public function newsimages()
-    {
-        return $this->hasMany(NewsImage::class);
-    }
-
 
     public function socialaccounts()
     {

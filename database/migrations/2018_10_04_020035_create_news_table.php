@@ -25,6 +25,7 @@ class CreateNewsTable extends Migration
                   ->onDelete('cascade');
             $table->text('judul');      
             $table->text('isi');
+            $table->softDeletes();
             $table->timestamps();
         });
     }
